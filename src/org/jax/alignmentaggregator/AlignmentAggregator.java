@@ -64,7 +64,7 @@ public class AlignmentAggregator {
 			}
 		}
 		
-		if(argidx != 4) {
+		if(argidx != 3) {
 			System.out.println("Usage: bamfile clusterbarcodes outputdirectory");
 			System.out.println("Options: --bambc     Bamfile attribute used for the barcode. (Default: \"CB\")");
 			System.out.println("         --startbases The amount of bases add to the start position (must be 0 or positive). (Default: 4)");
@@ -253,11 +253,11 @@ public class AlignmentAggregator {
 				int newlength = length-remainder;
 				
 				if (newlength > 0) {
-					newcigar.add(new CigarElement(length, curop));
+					newcigar.add(new CigarElement(newlength, curop));
 					break;
 				}
 				else {
-					remainder = remainder+newlength;
+					remainder = -newlength;
 				}
 				first = false;
 			}
