@@ -141,6 +141,7 @@ public class AlignmentAggregator {
 		}
 		System.out.println("Splitting BAM files into clusters.");
 
+		int errorcount = 0;
 		while(it.hasNext()){
 			SAMRecord next = it.next();
 			
@@ -160,13 +161,18 @@ public class AlignmentAggregator {
 					SAMFileWriter curwriter = writers.get(cluster);
 					boolean isnegative = next.getReadNegativeStrandFlag();
 					
-					if (isnegative) {
-						//Reverse Strand
-						curwriter.addAlignment(updateReverseRead(next));
+					try {
+						if (isnegative) {
+							//Reverse Strand
+							curwriter.addAlignment(updateReverseRead(next));
+						}
+						else {
+							//Forward Strand
+							curwriter.addAlignment(updateForwardRead(next));
+						}
 					}
-					else {
-						//Forward Strand
-						curwriter.addAlignment(updateForwardRead(next));
+					catch(Exception e) {
+						errorcount++;
 					}
 					
 
@@ -181,6 +187,8 @@ public class AlignmentAggregator {
 			SAMFileWriter next = wit.next();
 			next.close();
 		}
+		
+		System.out.println("Finished with "+Integer.toString(errorcount)+" errors.");
 		
 	}
 	
